@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Robbiblubber.Spellbook\Robbiblubber.Spellbook.csproj" />
+    <ProjectReference Include="..\Robbiblubber.Spellbook.TestPluginDependency\Robbiblubber.Spellbook.TestPluginDependency.csproj" />
+  </ItemGroup>
+
+</Project>
