@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0-windows;net10.0-windows</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>robbiblubber.org Spellbook Windows Support Library</Title>
+    <Version>3.2.2</Version>
+    <Authors>Alexander Lang</Authors>
+    <Company>robbiblubber.org</Company>
+    <Product>Robbiblubber Spellbook Libraries</Product>
+    <Description>The robbiblubber.org Spellbook Windows Support Library creates and reads shortcuts, registers file types and applications with Windows and reads and writes ini files.</Description>
+    <Copyright>© 2026 robbiblubber.org</Copyright>
+    <PackageProjectUrl>https://bitbucket.org/robbiblubber/robbiblubber.spellbook.net/</PackageProjectUrl>
+    <PackageIcon>nuget_robbiblubber.png</PackageIcon>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <RepositoryUrl>https://bitbucket.org/robbiblubber/robbiblubber.spellbook.net/</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>windows shortcut lnk file-association registry uninstall ini</PackageTags>
+    <PackageLicenseFile>license.txt</PackageLicenseFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Robbiblubber.Spellbook\Properties\AssemblyVersion.cs" Link="Properties\AssemblyVersion.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="license.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="readme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="nuget_robbiblubber.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,31 @@
+﻿namespace Robbiblubber.Spellbook.Controls;
+
+using System.Runtime.Versioning;
+
+
+
+/// <summary>This class provides event arguments for events that concern a form.</summary>
+[SupportedOSPlatform("windows")]
+public sealed class FormEventArgs: EventArgs
+{
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// constructors                                                                                                     //
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>Creates a new instance of this class.</summary>
+	/// <param name="form">Form.</param>
+	public FormEventArgs(Form form): base()
+	{
+		Form = form;
+	}
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// public properties                                                                                                //
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// <summary>Gets the form.</summary>
+	public Form Form
+	{
+		get;
+	}
+}
