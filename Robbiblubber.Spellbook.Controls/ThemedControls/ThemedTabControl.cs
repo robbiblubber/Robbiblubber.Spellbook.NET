@@ -15,7 +15,9 @@ using Robbiblubber.Spellbook.Controls.Themes;
 ///          buttons, the selected one in the accent color. The theme manager applies the theme to the tab pages.</para>
 ///          <para>With <see cref="TabDrawMode.OwnerDrawFixed"/> the control draws the background and the frames and raises
 ///          <see cref="TabControl.DrawItem"/> for the content of each tab. Because the tab control draws itself, the
-///          <see cref="Control.Paint"/> event does not occur.</para></remarks>
+///          <see cref="Control.Paint"/> event does not occur.</para>
+///          <para>When the tabs do not fit in one row, the scroll buttons are drawn in the same colors (see
+///          <see cref="_TabScrollWindow"/>).</para></remarks>
 [SupportedOSPlatform("windows")]
 [ToolboxBitmap(typeof(TabControl))]
 public class ThemedTabControl: TabControl, Themes.IThemedControl
@@ -29,6 +31,9 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 
 	/// <summary>Index of the tab under the mouse, -1 for none.</summary>
 	private int _Hot = -1;
+
+	/// <summary>Scroll buttons, NULL while the tabs fit.</summary>
+	private _TabScrollWindow? _Scroll = null;
 
 
 
@@ -60,6 +65,25 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 	}
 
 
+	/// <summary>Draws the scroll buttons in the colors of the theme if the tab control shows them.</summary>
+	/// <remarks>The tab control creates its up-down control when the tabs stop fitting, and destroys it when they fit again.</remarks>
+	private void _AttachScroll()
+	{
+		if(!IsHandleCreated) return;
+
+		IntPtr handle = _NativeMethods._FindWindowEx(Handle, IntPtr.Zero, "msctls_updown32", null);
+		if(handle == IntPtr.Zero)
+		{
+			_Scroll = null;
+			return;
+		}
+		if((_Scroll is not null) && (_Scroll.Handle == handle)) return;
+
+		if((_Scroll is not null) && (_Scroll.Handle != IntPtr.Zero)) { _Scroll.ReleaseHandle(); }
+		_Scroll = new _TabScrollWindow(this, handle);
+	}
+
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// internal properties                                                                                              //
@@ -69,6 +93,13 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 	internal int _HotIndex
 	{
 		get { return _Hot; }
+	}
+
+
+	/// <summary>Gets the color table for the scroll buttons.</summary>
+	internal ThemedTabControlColors _ColorTable
+	{
+		get { return _Colors; }
 	}
 
 
@@ -147,6 +178,7 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 	private void _Colors_Changed(object? sender, EventArgs e)
 	{
 		Invalidate();
+		_Scroll?._Invalidate();
 	}
 
 
@@ -178,6 +210,33 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 	{
 		base.OnHandleCreated(e);
 		_TabSupport._SendFont(this);
+		_AttachScroll();
+	}
+
+
+	/// <inheritdoc/>
+	protected override void OnHandleDestroyed(EventArgs e)
+	{
+		if((_Scroll is not null) && (_Scroll.Handle != IntPtr.Zero)) { _Scroll.ReleaseHandle(); }
+		_Scroll = null;
+		base.OnHandleDestroyed(e);
+	}
+
+
+	/// <inheritdoc/>
+	protected override void OnLayout(LayoutEventArgs levent)
+	{
+		base.OnLayout(levent);
+		_AttachScroll();
+	}
+
+
+	/// <inheritdoc/>
+	/// <remarks>Notices when the tab control creates its scroll buttons.</remarks>
+	protected override void WndProc(ref Message m)
+	{
+		base.WndProc(ref m);
+		if((m.Msg == _NativeMethods._WM_PARENTNOTIFY) && ((m.WParam.ToInt64() & 0xFFFF) == _NativeMethods._WM_CREATE)) { _AttachScroll(); }
 	}
 
 
@@ -210,6 +269,7 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 	protected override void OnSelectedIndexChanged(EventArgs e)
 	{
 		Invalidate();
+		_Scroll?._Invalidate();
 		base.OnSelectedIndexChanged(e);
 	}
 
@@ -236,6 +296,7 @@ public class ThemedTabControl: TabControl, Themes.IThemedControl
 		_Hot = -1;
 		base.OnEnabledChanged(e);
 		Invalidate();
+		_Scroll?._Invalidate();
 	}
 
 

@@ -190,6 +190,28 @@ internal static partial class _NativeMethods
 	internal const int _DWMWA_TEXT_COLOR = 36;
 	/// <summary>Desktop window manager color value: default color.</summary>
 	internal const int _DWMWA_COLOR_DEFAULT = unchecked((int) 0xFFFFFFFF);
+	/// <summary>Message: the background of a window is erased.</summary>
+	internal const int _WM_ERASEBKGND = 0x0014;
+	/// <summary>Message: the mouse has moved.</summary>
+	internal const int _WM_MOUSEMOVE = 0x0200;
+	/// <summary>Message: the left mouse button has been released.</summary>
+	internal const int _WM_LBUTTONUP = 0x0202;
+	/// <summary>Message: the mouse has left the window (<see cref="_TrackMouseEvent"/>).</summary>
+	internal const int _WM_MOUSELEAVE = 0x02A3;
+	/// <summary>Message: a child window has been created or destroyed, or clicked.</summary>
+	internal const int _WM_PARENTNOTIFY = 0x0210;
+	/// <summary>Message: a window is created; with <see cref="_WM_PARENTNOTIFY"/> a child window has been created.</summary>
+	internal const int _WM_CREATE = 0x0001;
+	/// <summary>Up-down message: gets the range.</summary>
+	internal const int _UDM_GETRANGE32 = 0x0470;
+	/// <summary>Up-down message: gets the position.</summary>
+	internal const int _UDM_GETPOS32 = 0x0472;
+	/// <summary>Up-down message: sets the position (16 bits).</summary>
+	internal const int _UDM_SETPOS = 0x0467;
+	/// <summary>Up-down message: sets the position.</summary>
+	internal const int _UDM_SETPOS32 = 0x0471;
+	/// <summary>Flag of <see cref="_TrackMouseEvent"/>: report when the mouse leaves the window.</summary>
+	internal const int _TME_LEAVE = 0x00000002;
 
 
 
@@ -529,6 +551,32 @@ internal static partial class _NativeMethods
 	internal static partial int _SetTextColor(IntPtr hdc, int color);
 
 
+	/// <summary>Gets the client area of a window.</summary>
+	/// <param name="hWnd">Window handle.</param>
+	/// <param name="rect">Receives the client area.</param>
+	/// <returns>Returns <c>true</c> if successful.</returns>
+	[LibraryImport("user32.dll", EntryPoint = "GetClientRect")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool _GetClientRect(IntPtr hWnd, out _Rect rect);
+
+
+	/// <summary>Marks the client area of a window as painted.</summary>
+	/// <param name="hWnd">Window handle.</param>
+	/// <param name="rect">Rectangle, IntPtr.Zero for the whole client area.</param>
+	/// <returns>Returns <c>true</c> if successful.</returns>
+	[LibraryImport("user32.dll", EntryPoint = "ValidateRect")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool _ValidateRect(IntPtr hWnd, IntPtr rect);
+
+
+	/// <summary>Asks for a message when the mouse leaves a window.</summary>
+	/// <param name="info">What to track.</param>
+	/// <returns>Returns <c>true</c> if successful.</returns>
+	[LibraryImport("user32.dll", EntryPoint = "TrackMouseEvent")]
+	[return: MarshalAs(UnmanagedType.Bool)]
+	internal static partial bool _TrackMouseEvent(ref _TrackMouseEventInfo info);
+
+
 	/// <summary>Invalidates a window so it is painted again.</summary>
 	/// <param name="hWnd">Window handle.</param>
 	/// <param name="rect">Rectangle, IntPtr.Zero for the whole window.</param>
@@ -640,6 +688,33 @@ internal static partial class _NativeMethods
 
 		/// <summary>Height.</summary>
 		public int Height;
+	}
+
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// [struct] _TrackMouseEventInfo                                                                                    //
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/// <summary>This struct represents a Win32 TRACKMOUSEEVENT structure.</summary>
+	[StructLayout(LayoutKind.Sequential)]
+	internal struct _TrackMouseEventInfo
+	{
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// public members                                                                                               //
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		/// <summary>Size of the structure.</summary>
+		public int cbSize;
+
+		/// <summary>Flags, for example <see cref="_TME_LEAVE"/>.</summary>
+		public int dwFlags;
+
+		/// <summary>Window handle.</summary>
+		public IntPtr hwndTrack;
+
+		/// <summary>Hover time.</summary>
+		public int dwHoverTime;
 	}
 
 
